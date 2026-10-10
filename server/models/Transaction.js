@@ -4,6 +4,12 @@ const mongoose = require("mongoose");
 // received = customer ne payment di (customer ka baaki ghat'ta hai)
 const transactionSchema = new mongoose.Schema(
   {
+    owner: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true,
+    },
     customer: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Customer",

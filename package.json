@@ -1,0 +1,15 @@
+{
+  "name": "credit-ledger-app",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Credit Ledger App - MERN app to track customer credit and payments",
+  "scripts": {
+    "setup": "npm --prefix server install && npm --prefix client install",
+    "dev": "concurrently -n server,client -c blue,green \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
+    "build": "npm --prefix client run build",
+    "start": "npm --prefix server start"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
+  }
+}

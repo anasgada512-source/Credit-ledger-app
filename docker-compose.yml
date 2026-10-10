@@ -1,0 +1,13 @@
+# Local MongoDB chalane ke liye (optional). Docker installed ho to:  docker compose up -d
+# Phir server/.env mein MONGO_URI=mongodb://127.0.0.1:27017/credit-ledger rakhein.
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:

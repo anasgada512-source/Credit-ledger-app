@@ -7,6 +7,10 @@ services:
     startCommand: npm start
     healthCheckPath: /health
     envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
       - key: MONGO_URI
         sync: false
       - key: CORS_ORIGIN

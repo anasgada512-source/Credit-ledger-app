@@ -82,3 +82,13 @@ input:focus { outline: 2px solid #bfdbfe; border-color: var(--primary); }
   .layout { grid-template-columns: 1fr; }
   .list ul { max-height: 40vh; }
 }
+
+/* ---- Login / Register ---- */
+.auth-wrap { min-height: 100vh; display: grid; place-items: center; padding: 16px; }
+.auth-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 24px; width: 100%; max-width: 380px; display: flex; flex-direction: column; gap: 12px; }
+.auth-card h1 { font-size: 1.3rem; margin: 0; }
+.auth-card p { margin: 0; }
+.auth-card label { display: flex; flex-direction: column; gap: 4px; font-size: 0.85rem; color: var(--muted); }
+.center { text-align: center; }
+.link-btn { background: none; border: 0; color: var(--primary); cursor: pointer; font-size: inherit; padding: 0; }
+.who { align-self: center; }

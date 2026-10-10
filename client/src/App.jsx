@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import { api, rupees, fmtDate } from "./api.js";
+import { api, auth, rupees, fmtDate } from "./api.js";
+import AuthPage from "./components/AuthPage.jsx";
 import CustomerForm from "./components/CustomerForm.jsx";
 import CustomerDetail from "./components/CustomerDetail.jsx";
 
-export default function App() {
+function Ledger({ user, onLogout }) {
   const [summary, setSummary] = useState(null);
   const [customers, setCustomers] = useState([]);
   const [query, setQuery] = useState("");
@@ -31,9 +32,15 @@ export default function App() {
     <div className="app">
       <header className="topbar">
         <h1>📒 Credit Ledger App</h1>
-        <button className="btn primary" onClick={() => setShowForm(true)}>
-          + Naya Customer
-        </button>
+        <div className="actions">
+          <span className="muted small who">{user.name}</span>
+          <button className="btn primary" onClick={() => setShowForm(true)}>
+            + Naya Customer
+          </button>
+          <button className="btn" onClick={onLogout}>
+            Logout
+          </button>
+        </div>
       </header>
 
       {error && <div className="alert">{error}</div>}
@@ -117,5 +124,40 @@ function Stat({ label, value, tone }) {
       <span className="muted small">{label}</span>
       <strong className={tone || ""}>{value}</strong>
     </div>
+  );
+}
+
+export default function App() {
+  const [user, setUser] = useState(null);
+  const [checking, setChecking] = useState(Boolean(auth.getToken()));
+
+  // Page khulte hi saved token se user wapas pehchano
+  useEffect(() => {
+    if (!auth.getToken()) return;
+    api
+      .me()
+      .then((d) => setUser(d.user))
+      .catch(() => auth.clear())
+      .finally(() => setChecking(false));
+  }, []);
+
+  // Token expire hone par automatic logout
+  useEffect(() => {
+    const onExpired = () => setUser(null);
+    window.addEventListener("auth-expired", onExpired);
+    return () => window.removeEventListener("auth-expired", onExpired);
+  }, []);
+
+  if (checking) return <p className="muted pad">Load ho raha hai…</p>;
+  if (!user) return <AuthPage onLoggedIn={setUser} />;
+
+  return (
+    <Ledger
+      user={user}
+      onLogout={() => {
+        auth.clear();
+        setUser(null);
+      }}
+    />
   );
 }
