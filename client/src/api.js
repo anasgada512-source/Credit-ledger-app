@@ -23,15 +23,23 @@ export const auth = {
 
 async function request(path, options = {}) {
   const token = auth.getToken();
-  const res = await fetch(`${API_BASE}/api${path}`, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
-    body: options.body ? JSON.stringify(options.body) : undefined,
-  });
+  let res;
+  try {
+    res = await fetch(`${API_BASE}/api${path}`, {
+      ...options,
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: options.body ? JSON.stringify(options.body) : undefined,
+    });
+  } catch {
+    throw new Error("Server se connect nahi ho pa raha. Backend chal raha hai? (terminal mein error dekhein)");
+  }
   const data = await res.json().catch(() => ({}));
+  if (!res.ok && !data.error && res.status >= 500) {
+    throw new Error("Server band hai ya database connect nahi hai. Terminal mein error dekhein.");
+  }
   if (res.status === 401 && token && !path.startsWith("/auth/login")) {
     // Token expire ya galat: login screen par bhej do
     auth.clear();
